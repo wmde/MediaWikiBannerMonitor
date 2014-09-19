@@ -1,4 +1,7 @@
 {
+	"name": "wmde/mediawiki-banner-monitor",
+	"type": "library",
+	"description": "Application for monitoring banners defined by a MediaWiki instance",
 	"require": {
 		"php": ">=5.4.0",
 		"jeroen/file-fetcher": "~2.0",
