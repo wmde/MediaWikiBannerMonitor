@@ -1,0 +1,16 @@
+{
+	"require": {
+		"php": ">=5.4.0",
+		"jeroen/file-fetcher": "~2.0"
+	},
+	"autoload": {
+		"psr-4": {
+			"BannerMonitor\\": "src/"
+		}
+	},
+	"extra": {
+		"branch-alias": {
+			"dev-master": "0.1.x-dev"
+		}
+	}
+}
