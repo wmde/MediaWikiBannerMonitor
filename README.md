@@ -3,6 +3,7 @@
 A small CLI application for monitoring banners defined by a MediaWiki instance and sending
 notifications if something is wrong.
 
+[![Build Status](https://travis-ci.org/wmde/MediaWikiBannerMonitor.svg?branch=master)](https://travis-ci.org/wmde/MediaWikiBannerMonitor)
 [![Code Coverage](https://scrutinizer-ci.com/g/wmde/MediaWikiBannerMonitor/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/wmde/MediaWikiBannerMonitor/?branch=master)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/wmde/MediaWikiBannerMonitor/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/wmde/MediaWikiBannerMonitor/?branch=master)
 
