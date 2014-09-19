@@ -3,6 +3,9 @@
 A small CLI application for monitoring banners defined by a MediaWiki instance and sending
 notifications if something is wrong.
 
+[![Code Coverage](https://scrutinizer-ci.com/g/wmde/MediaWikiBannerMonitor/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/wmde/MediaWikiBannerMonitor/?branch=master)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/wmde/MediaWikiBannerMonitor/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/wmde/MediaWikiBannerMonitor/?branch=master)
+
 ## Installation
 
 PHP 5.4 or above is needed.
