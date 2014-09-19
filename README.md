@@ -13,6 +13,14 @@ Change into the root directory and run
 
     composer install
 
+## Usage
+
+Change into the root directory and run
+
+    php monitor
+
+This will output a list of available commands.
+
 ## Running the tests
 
 Change into the root directory and run
