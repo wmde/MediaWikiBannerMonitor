@@ -11,6 +11,7 @@ use Symfony\Component\Console\Tester\CommandTester;
  */
 class CheckBannersCommandTest extends \PHPUnit_Framework_TestCase {
 
+
 	private function getOutputForArguments( array $arguments ) {
 		$command = new CheckBannersCommand();
 
@@ -26,6 +27,18 @@ class CheckBannersCommandTest extends \PHPUnit_Framework_TestCase {
 		$output = $this->getOutputForArguments( array() );
 
 		$this->assertContains( 'Done checking banners', $output );
+	}
+
+	public function testCheckBannersCommandWithConfigFileArgument() {
+		$output = $this->getOutputForArguments( array( 'config-file' => 'banners.conf' ) );
+
+		$this->assertContains( '...with file banners.conf', $output );
+	}
+
+	public function testCheckBannersCommandWithNotificationOption() {
+		$output = $this->getOutputForArguments( array( 'config-file' => 'banners.conf', '--notify-mail' => true ) );
+
+		$this->assertContains( '...with notify-mail option', $output );
 	}
 
 }
