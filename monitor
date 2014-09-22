@@ -2,15 +2,6 @@
 
 <?php
 
-use Symfony\Component\Console\Application;
-
 require_once 'vendor/autoload.php';
 
-$console = new Application();
-
-$console->setName( 'Banner monitor' );
-$console->setVersion( '0.1' );
-
-$console->add( new \BannerMonitor\Commands\CheckBannersCommand() );
-
-$console->run();
+( new BannerMonitor\Factory() )->newCliApplication()->run();
