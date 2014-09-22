@@ -20,8 +20,12 @@ class CheckBannersCommand extends Command {
             ->setDescription( 'Checks the banners' );
     }
 
+	public function setDependencies() {
+
+	}
+
     protected function execute( InputInterface $input, OutputInterface $output ) {
-        
+		$output->writeln( 'Done checking banners' );
     }
 
 }

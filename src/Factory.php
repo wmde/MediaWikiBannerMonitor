@@ -12,14 +12,22 @@ use Symfony\Component\Console\Application;
 class Factory {
 
 	public function newCliApplication() {
-		$application = new Application();
+		$app = new Application();
 
-		$application->setName( 'Banner monitor' );
-		$application->setVersion( '0.1' );
+		$app->setName( 'Banner monitor' );
+		$app->setVersion( '0.1' );
 
-		$application->add( new CheckBannersCommand() );
+		$this->addCheckBannersCommandTo( $app );
 
-		return $application;
+		return $app;
 	}
 
-} 
+	private function addCheckBannersCommandTo( Application $app ) {
+		$command = new CheckBannersCommand();
+
+		$command->setDependencies();
+
+		$app->add( $command );
+	}
+
+}
