@@ -4,7 +4,7 @@ use BannerMonitor\BannerMonitor;
 use BannerMonitor\Banner;
 
 /**
- * @covers BannerMonitor
+ * @covers BannerMonitor\BannerMonitor
  *
  * @licence GNU GPL v2+
  * @author Christoph Fischer
