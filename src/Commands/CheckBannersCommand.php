@@ -19,7 +19,7 @@ class CheckBannersCommand extends Command {
 
 	private $configFetcher;
 
-    protected function configure() {
+	protected function configure() {
 		$this
 			->setName( 'checkbanners' )
 			->setDescription( 'Checks the banners configured in the given config file' )
@@ -33,26 +33,25 @@ class CheckBannersCommand extends Command {
 				null,
 				InputOption::VALUE_NONE,
 				'notify by mail'
-			)
-		;
-    }
+			);
+	}
 
 	public function setDependencies( ConfigFetcher $configFetcher ) {
 		$this->configFetcher = $configFetcher;
 	}
 
-    protected function execute( InputInterface $input, OutputInterface $output ) {
+	protected function execute( InputInterface $input, OutputInterface $output ) {
 		$confFile = $input->getArgument( 'config-file' );
 
 		$output->writeln( 'Checking banners' );
 
-		if ( $confFile ) {
+		if( $confFile ) {
 			$output->writeln( '...with file ' . $confFile );
 		}
 
-		if ( $input->getOption( 'notify-mail' ) ) {
+		if( $input->getOption( 'notify-mail' ) ) {
 			$output->writeln( '...with notify-mail option' );
 		}
-    }
+	}
 
 }

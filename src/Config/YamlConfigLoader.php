@@ -12,9 +12,7 @@ use Symfony\Component\Yaml\Yaml;
 class YamlConfigLoader extends FileLoader {
 
 	public function load( $resource, $type = null ) {
-		$configValues = Yaml::parse( $resource );
-
-		return $configValues;
+		return Yaml::parse( $resource );
 	}
 
 	public function supports( $resource, $type = null ) {

@@ -14,7 +14,7 @@ class ConfigFetcher {
 	public function fetchConfig( $fileName ) {
 		$configValues = $this->fetchConfigValues( $fileName );
 
-		if( !is_array($configValues) ) {
+		if( !is_array( $configValues ) ) {
 			return false;
 		}
 
@@ -27,7 +27,7 @@ class ConfigFetcher {
 		return $configuration;
 	}
 
-	private function fetchConfigValues ( $fileName ) {
+	private function fetchConfigValues( $fileName ) {
 		$locator = new FileLocator();
 
 		$loader = new YamlConfigLoader( $locator );
@@ -36,7 +36,7 @@ class ConfigFetcher {
 		return $configValues;
 	}
 
-	private function validateConfiguration ( $configValues ) {
+	private function validateConfiguration( $configValues ) {
 		$processor = new Processor();
 		$configuration = new Configuration();
 

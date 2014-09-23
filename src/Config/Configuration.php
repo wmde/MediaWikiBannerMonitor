@@ -17,15 +17,15 @@ class Configuration implements ConfigurationInterface {
 
 		$rootNode
 			->children()
-			->scalarNode( 'project' )
-			->defaultValue( '' )
-			->end()
-			->scalarNode( 'country' )
-			->defaultValue( '' )
-			->end()
-			->scalarNode( 'language' )
-			->defaultValue( '' )
-			->end()
+				->scalarNode( 'project' )
+					->defaultValue( '' )
+				->end()
+				->scalarNode( 'country' )
+					->defaultValue( '' )
+				->end()
+				->scalarNode( 'language' )
+					->defaultValue( '' )
+				->end()
 			->end();
 
 		return $treeBuilder;
