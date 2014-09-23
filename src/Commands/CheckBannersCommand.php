@@ -19,10 +19,10 @@ class CheckBannersCommand extends Command {
     protected function configure() {
 		$this
 			->setName( 'checkbanners' )
-			->setDescription( 'Checks the banners' )
+			->setDescription( 'Checks the banners configured in the given config file' )
 			->addArgument(
 				'config-file',
-				InputArgument::OPTIONAL,
+				InputArgument::REQUIRED,
 				'configuration file for the banner checks'
 			)
 			->addOption(
@@ -41,7 +41,7 @@ class CheckBannersCommand extends Command {
     protected function execute( InputInterface $input, OutputInterface $output ) {
 		$confFile = $input->getArgument( 'config-file' );
 
-		$output->writeln( 'Done checking banners' );
+		$output->writeln( 'Checking banners' );
 
 		if ( $confFile ) {
 			$output->writeln( '...with file ' . $confFile );
