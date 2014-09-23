@@ -1,5 +1,7 @@
 <?php
+
 namespace BannerMonitor\Config;
+
 use Symfony\Component\Config\Definition\Processor;
 use Symfony\Component\Config\FileLocator;
 
