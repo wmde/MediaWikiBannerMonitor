@@ -16,6 +16,8 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class CheckBannersCommand extends Command {
 
+	private $configFetcher;
+
     protected function configure() {
 		$this
 			->setName( 'checkbanners' )
@@ -34,8 +36,8 @@ class CheckBannersCommand extends Command {
 		;
     }
 
-	public function setDependencies() {
-
+	public function setDependencies( \BannerMonitor\Config\ConfigFetcher $configFetcher ) {
+		$this->configFetcher = $configFetcher;
 	}
 
     protected function execute( InputInterface $input, OutputInterface $output ) {

@@ -3,6 +3,7 @@
 namespace BannerMonitor;
 
 use BannerMonitor\Commands\CheckBannersCommand;
+use BannerMonitor\Config\ConfigFetcher;
 use Symfony\Component\Console\Application;
 
 /**
@@ -25,7 +26,7 @@ class Factory {
 	private function addCheckBannersCommandTo( Application $app ) {
 		$command = new CheckBannersCommand();
 
-		$command->setDependencies();
+		$command->setDependencies( new ConfigFetcher() );
 
 		$app->add( $command );
 	}

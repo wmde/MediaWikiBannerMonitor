@@ -3,6 +3,7 @@
 namespace Tests\System\Wikibase\Query\Cli;
 
 use BannerMonitor\Commands\CheckBannersCommand;
+use BannerMonitor\Config\ConfigFetcher;
 use Symfony\Component\Console\Tester\CommandTester;
 
 /**
@@ -15,7 +16,7 @@ class CheckBannersCommandTest extends \PHPUnit_Framework_TestCase {
 	private function getOutputForArguments( array $arguments ) {
 		$command = new CheckBannersCommand();
 
-		$command->setDependencies();
+		$command->setDependencies( new ConfigFetcher() );
 
 		$tester = new CommandTester( $command );
 		$tester->execute( $arguments );
