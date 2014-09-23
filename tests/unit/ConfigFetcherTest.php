@@ -9,11 +9,11 @@ use org\bovigo\vfs\vfsStreamWrapper;
  */
 class ConfigFetcherTest extends \PHPUnit_Framework_TestCase {
 
-	private $_rootDir;
+	private $rootDir;
 
 	protected function setUp() {
 		vfsStream::setup( 'test' );
-		$this->_rootDir = vfsStream::url( 'test' );
+		$this->rootDir = vfsStream::url( 'test' );
 	}
 
 	public function testInvalidFilename_ReturnsFalse() {
@@ -22,7 +22,7 @@ class ConfigFetcherTest extends \PHPUnit_Framework_TestCase {
 
 		$configFetcher = new ConfigFetcher();
 
-		$this->assertFalse( $configFetcher->fetchConfig( $this->_rootDir . DIRECTORY_SEPARATOR . $confFilename ) );
+		$this->assertFalse( $configFetcher->fetchConfig( $this->rootDir . DIRECTORY_SEPARATOR . $confFilename ) );
 	}
 
 	public function testInvalidFileContent_ReturnsFalse() {
@@ -31,7 +31,7 @@ class ConfigFetcherTest extends \PHPUnit_Framework_TestCase {
 
 		$configFetcher = new ConfigFetcher();
 
-		$this->assertFalse( $configFetcher->fetchConfig( $this->_rootDir . DIRECTORY_SEPARATOR . $confFilename ) );
+		$this->assertFalse( $configFetcher->fetchConfig( $this->rootDir . DIRECTORY_SEPARATOR . $confFilename ) );
 	}
 
 	public function testValidFileContent_ReturnsContent() {
@@ -56,7 +56,7 @@ centralnoticeallocations:
 	}
 
 	private function getMockFilePath( $fileName ) {
-		return $this->_rootDir . DIRECTORY_SEPARATOR . $fileName;
+		return $this->rootDir . DIRECTORY_SEPARATOR . $fileName;
 	}
 
 	private function mockFile( $fileName ) {
