@@ -4,6 +4,8 @@ use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamWrapper;
 
 /**
+ * @covers BannerMonitor\Config\ConfigFetcher
+ *
  * @licence GNU GPL v2+
  * @author Christoph Fischer
  */
