@@ -3,7 +3,7 @@
 namespace BannerMonitor\Config;
 
 use Symfony\Component\Config\Definition\Processor;
-use Symfony\Component\Config\FileLocator;
+use Symfony\Component\Yaml\Yaml;
 
 /**
  * @licence GNU GPL v2+
@@ -11,6 +11,10 @@ use Symfony\Component\Config\FileLocator;
  */
 class ConfigFetcher {
 
+	/**
+	 * @param string $fileName
+	 * @return array|bool
+	 */
 	public function fetchConfig( $fileName ) {
 		$configValues = $this->fetchConfigValues( $fileName );
 
@@ -28,12 +32,7 @@ class ConfigFetcher {
 	}
 
 	private function fetchConfigValues( $fileName ) {
-		$locator = new FileLocator();
-
-		$loader = new YamlConfigLoader( $locator );
-		$configValues = $loader->load( $locator->locate( $fileName ) );
-
-		return $configValues;
+		return YAML::parse( $fileName );
 	}
 
 	private function validateConfiguration( $configValues ) {
