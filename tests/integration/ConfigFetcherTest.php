@@ -83,7 +83,6 @@ centralnoticeallocations:
 	}
 
 	private function setUpFetcher() {
-
 		$fileFetcher = new SimpleFileFetcher();
 		return new ConfigFetcher( $fileFetcher );
 	}
