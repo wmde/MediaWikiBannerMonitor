@@ -26,6 +26,15 @@ class Configuration implements ConfigurationInterface {
 				->scalarNode( 'language' )
 					->defaultValue( '' )
 				->end()
+				->arrayNode( 'checkForLiveBanners' )
+					->prototype('array')
+						->children()
+							->scalarNode( 'bannerId' )->end()
+							->scalarNode( 'start' )->end()
+							->scalarNode( 'end' )->end()
+						->end()
+					->end()
+				->end()
 			->end();
 
 		return $treeBuilder;
