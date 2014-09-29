@@ -3,6 +3,7 @@
 namespace Tests\System\Wikibase\Query\Cli;
 
 use BannerMonitor\Commands\CheckBannersCommand;
+use BannerMonitor\Config\ConfigFetcher;
 use Symfony\Component\Console\Tester\CommandTester;
 
 /**
@@ -23,10 +24,9 @@ class CheckBannersCommandTest extends \PHPUnit_Framework_TestCase {
 		return $tester->getDisplay();
 	}
 
-	public function testCheckBannersCommandWithDefaultArguments() {
-		$output = $this->getOutputForArguments( array() );
-
-		$this->assertContains( 'Done checking banners', $output );
+	public function testCheckBannersCommandWithNoArguments_RuntimeExceptionThrown() {
+		$this->setExpectedException('RuntimeException');
+		$this->getOutputForArguments( array() );
 	}
 
 	public function testCheckBannersCommandWithConfigFileArgument() {

@@ -3,6 +3,7 @@
 namespace BannerMonitor;
 
 use BannerMonitor\Commands\CheckBannersCommand;
+use BannerMonitor\Config\ConfigFetcher;
 use Symfony\Component\Console\Application;
 
 /**
