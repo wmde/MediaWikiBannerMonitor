@@ -76,10 +76,10 @@ centralnoticeallocations:
 		$this->mockFileWithContent( $confFilename, $contentMock );
 
 		$configFetcher = $this->setUpFetcher();
-		$this->setExpectedException('Symfony\Component\Config\Definition\Exception\InvalidConfigurationException');
-		$configFetcher->fetchConfig( $this->getMockFilePath( $confFilename ) );
 
-		#$this->assertFalse(  $configFetcher->fetchConfig( $this->getMockFilePath( $confFilename ) ));
+		$this->setExpectedException( 'Symfony\Component\Config\Definition\Exception\InvalidConfigurationException' );
+
+		$configFetcher->fetchConfig( $this->getMockFilePath( $confFilename ) );
 	}
 
 	private function setUpFetcher() {
