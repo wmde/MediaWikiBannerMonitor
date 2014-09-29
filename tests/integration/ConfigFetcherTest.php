@@ -66,6 +66,22 @@ centralnoticeallocations:
 		$this->assertSame( $configFetcher->fetchConfig( $this->getMockFilePath( $confFilename ) ), $output );
 	}
 
+	public function testInValidDates_ReturnsFalse() {
+		$confFilename = 'test.yaml';
+		$contentMock = "
+centralnoticeallocations:
+  checkForLiveBanners:
+    banner1: { bannerId: B14_WMDE_140925_ctrl, start: 2014-09-25, end: 2014-10-02 14:30 }
+";
+		$this->mockFileWithContent( $confFilename, $contentMock );
+
+		$configFetcher = $this->setUpFetcher();
+		$this->setExpectedException('Symfony\Component\Config\Definition\Exception\InvalidConfigurationException');
+		$configFetcher->fetchConfig( $this->getMockFilePath( $confFilename ) );
+
+		#$this->assertFalse(  $configFetcher->fetchConfig( $this->getMockFilePath( $confFilename ) ));
+	}
+
 	private function setUpFetcher() {
 
 		$fileFetcher = new SimpleFileFetcher();

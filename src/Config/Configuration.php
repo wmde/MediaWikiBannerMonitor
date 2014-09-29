@@ -2,6 +2,7 @@
 
 namespace BannerMonitor\Config;
 
+use DateTime;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 
@@ -30,13 +31,33 @@ class Configuration implements ConfigurationInterface {
 					->prototype('array')
 						->children()
 							->scalarNode( 'bannerId' )->end()
-							->scalarNode( 'start' )->end()
-							->scalarNode( 'end' )->end()
+							->scalarNode( 'start' )
+								->validate()
+									->ifTrue(function ($s) {
+										return !$this->validateDate($s, 'Y-m-d H:i');
+									})
+									->thenInvalid( 'Invalid Date' )
+								->end()
+							->end()
+								->scalarNode( 'end' )
+								->validate()
+									->ifTrue(function ($s) {
+										return !$this->validateDate($s, 'Y-m-d H:i');
+									})
+									->thenInvalid( 'Invalid Date' )
+								->end()
+							->end()
 						->end()
 					->end()
 				->end()
 			->end();
 
 		return $treeBuilder;
+	}
+
+	private function validateDate($date, $format)
+	{
+		$d = DateTime::createFromFormat($format, $date);
+		return $d && $d->format($format) == $date;
 	}
 } 

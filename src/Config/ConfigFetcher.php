@@ -52,10 +52,14 @@ class ConfigFetcher {
 		$processor = new Processor();
 		$configuration = new Configuration();
 
-		$processedConfiguration = $processor->processConfiguration(
-			$configuration,
-			$configValues
-		);
+		try {
+			$processedConfiguration = $processor->processConfiguration(
+				$configuration,
+				$configValues
+			);
+		} catch (Exception $e) {
+			return false;
+		}
 
 		return $processedConfiguration;
 	}
