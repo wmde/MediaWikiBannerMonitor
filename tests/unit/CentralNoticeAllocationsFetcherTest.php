@@ -8,22 +8,26 @@ use BannerMonitor\CentralNoticeAllocations\CentralNoticeAllocationsFetcher;
  * @licence GNU GPL v2+
  * @author Christoph Fischer
  */
-class CentralNoticeAllocationsFetcherTester extends PHPUnit_Framework_TestCase  {
+class CentralNoticeAllocationsFetcherTester extends PHPUnit_Framework_TestCase {
 
-    public function testFetcherReturnsInvalidHtml_CentralNoticeAllocationsReturnsFalse() {
+	/**
+	 * @dataProvider invalidDataProvider
+	 */
+	public function testFetcherReturnsInvalidData_CentralNoticeAllocationsReturnsFalse( $input ) {
 		$filterMock = $this->getMock( 'BannerMonitor\CentralNoticeAllocations\CentralNoticeApiFilter' );
 
-		$allocationsFetcher = $this->newCentralNoticeAllocationsFetcher( 'http://www.example.com/w/api.php?action=centralnoticeallocations&format=json', '<!DOCTYPE html' );
+		$allocationsFetcher = $this->newCentralNoticeAllocationsFetcher( 'http://www.example.com/w/api.php?action=centralnoticeallocations&format=json', $input );
 
 		$this->assertFalse( $allocationsFetcher->fetchBannersLive( $filterMock ) );
-    }
+	}
 
-	public function testFetcherReturnsFalseJson_CentralNoticeAllocationsReturnsFalse() {
-		$filterMock = $this->getMock( 'BannerMonitor\CentralNoticeAllocations\CentralNoticeApiFilter' );
-
-		$allocationsFetcher = $this->newCentralNoticeAllocationsFetcher( 'http://www.example.com/w/api.php?action=centralnoticeallocations&format=json', '{"servedby":"mw1125","error":{' );
-
-		$this->assertFalse( $allocationsFetcher->fetchBannersLive( $filterMock ) );
+	public function invalidDataProvider() {
+		return array(
+			array( '<?xml' ),
+			array( '<!DOCTYPE html' ),
+			array( '{"servedby":"mw1125","error":{' ),
+			array( '' ),
+		);
 	}
 
 	private function newCentralNoticeAllocationsFetcher( $fetcherInputUrl, $fetcherReturnValue ) {
