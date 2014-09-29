@@ -2,6 +2,7 @@
 use BannerMonitor\Config\ConfigFetcher;
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamWrapper;
+use FileFetcher\SimpleFileFetcher;
 
 /**
  * @covers BannerMonitor\Config\ConfigFetcher
@@ -22,18 +23,18 @@ class ConfigFetcherTest extends \PHPUnit_Framework_TestCase {
 		$confFilename = 'test.yml';
 		$this->mockFile( $confFilename );
 
-		$configFetcher = new ConfigFetcher();
+		$configFetcher = $this->setUpFetcher();
 
-		$this->assertFalse( $configFetcher->fetchConfig( $this->rootDir . DIRECTORY_SEPARATOR . $confFilename ) );
+		$this->assertFalse( $configFetcher->fetchConfig( $this->getMockFilePath( $confFilename ) ) );
 	}
 
 	public function testInvalidFileContent_ReturnsFalse() {
 		$confFilename = 'test.yaml';
 		$this->mockFileWithContent( $confFilename, 'adfdafsaf' );
 
-		$configFetcher = new ConfigFetcher();
+		$configFetcher = $this->setUpFetcher();
 
-		$this->assertFalse( $configFetcher->fetchConfig( $this->rootDir . DIRECTORY_SEPARATOR . $confFilename ) );
+		$this->assertFalse( $configFetcher->fetchConfig( $this->getMockFilePath( $confFilename ) ) );
 	}
 
 	public function testValidFileContent_ReturnsContent() {
@@ -52,9 +53,15 @@ centralnoticeallocations:
 
 		$this->mockFileWithContent( $confFilename, $contentMock );
 
-		$configFetcher = new ConfigFetcher();
+		$configFetcher = $this->setUpFetcher();
 
 		$this->assertSame( $configFetcher->fetchConfig( $this->getMockFilePath( $confFilename ) ), $output );
+	}
+
+	private function setUpFetcher() {
+
+		$fileFetcher = new SimpleFileFetcher();
+		return new ConfigFetcher( $fileFetcher );
 	}
 
 	private function getMockFilePath( $fileName ) {

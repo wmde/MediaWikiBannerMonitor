@@ -16,7 +16,7 @@ class CheckBannersCommandTest extends \PHPUnit_Framework_TestCase {
 	private function getOutputForArguments( array $arguments ) {
 		$command = new CheckBannersCommand();
 
-		$command->setDependencies( new ConfigFetcher() );
+		$command->setDependencies();
 
 		$tester = new CommandTester( $command );
 		$tester->execute( $arguments );

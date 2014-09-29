@@ -26,7 +26,7 @@ class Factory {
 	private function addCheckBannersCommandTo( Application $app ) {
 		$command = new CheckBannersCommand();
 
-		$command->setDependencies( new ConfigFetcher() );
+		$command->setDependencies();
 
 		$app->add( $command );
 	}

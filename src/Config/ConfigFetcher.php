@@ -4,6 +4,7 @@ namespace BannerMonitor\Config;
 
 use Symfony\Component\Config\Definition\Processor;
 use Symfony\Component\Yaml\Yaml;
+use FileFetcher\FileFetcher;
 
 /**
  * @licence GNU GPL v2+
@@ -11,12 +12,20 @@ use Symfony\Component\Yaml\Yaml;
  */
 class ConfigFetcher {
 
+	private $fetcher;
+
+	public function __construct ( FileFetcher $fetcher ) {
+		$this->fetcher = $fetcher;
+	}
+
 	/**
 	 * @param string $fileName
 	 * @return array|bool
 	 */
 	public function fetchConfig( $fileName ) {
-		$configValues = $this->fetchConfigValues( $fileName );
+		$content = $this->fetchConfigContent( $fileName );
+
+		$configValues = $this->parseConfigContent( $content );
 
 		if( !is_array( $configValues ) ) {
 			return false;
@@ -31,8 +40,12 @@ class ConfigFetcher {
 		return $configuration;
 	}
 
-	private function fetchConfigValues( $fileName ) {
-		return YAML::parse( $fileName );
+	private function fetchConfigContent( $fileName ) {
+		return $this->fetcher->fetchFile( $fileName );
+	}
+
+	private function parseConfigContent( $content ) {
+		return YAML::parse( $content );
 	}
 
 	private function validateConfiguration( $configValues ) {

@@ -36,8 +36,7 @@ class CheckBannersCommand extends Command {
 			);
 	}
 
-	public function setDependencies( ConfigFetcher $configFetcher ) {
-		$this->configFetcher = $configFetcher;
+	public function setDependencies() {
 	}
 
 	protected function execute( InputInterface $input, OutputInterface $output ) {
