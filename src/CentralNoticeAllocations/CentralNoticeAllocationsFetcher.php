@@ -53,15 +53,14 @@ class CentralNoticeAllocationsFetcher {
 		return $this->apiBaseUrl . '?' . http_build_query( $getParameter );
 	}
 
-	public function getBanners( $string )
-	{
-		$jsonResponse = json_decode($string);
+	public function getBanners( $string ) {
+		$jsonResponse = json_decode( $string );
 
 		if( $jsonResponse === null ) {
 			return false;
 		}
 
-		if( !isset($jsonResponse->centralnoticeallocations) || !is_array($jsonResponse->centralnoticeallocations->banners) ) {
+		if( !isset( $jsonResponse->centralnoticeallocations ) || !is_array( $jsonResponse->centralnoticeallocations->banners ) ) {
 			return false;
 		}
 
