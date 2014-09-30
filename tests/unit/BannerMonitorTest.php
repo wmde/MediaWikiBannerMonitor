@@ -1,8 +1,20 @@
 <?php
 
+namespace BannerMonitor;
+
 use BannerMonitor\BannerMonitor;
 use BannerMonitor\CentralNoticeAllocations\CentralNoticeAllocationsBanner;
 use BannerMonitor\CentralNoticeAllocations\CentralNoticeApiFilter;
+
+/**
+ * Override time() in current namespace for testing
+ *
+ * @return int
+ */
+function time()
+{
+	return BannerMonitorTest::$now ?: \time();
+}
 
 /**
  * @covers BannerMonitor\BannerMonitor
@@ -10,7 +22,14 @@ use BannerMonitor\CentralNoticeAllocations\CentralNoticeApiFilter;
  * @licence GNU GPL v2+
  * @author Christoph Fischer
  */
-class BannerMonitorTest extends PHPUnit_Framework_TestCase {
+class BannerMonitorTest extends \PHPUnit_Framework_TestCase {
+
+	public static $now;
+
+	protected function tearDown()
+	{
+		self::$now = null;
+	}
 
 	public function testFetcherError_MissingBannersReturnsFalse() {
 		$bannerMonitor = $this->newBannerMonitor( $this->mockFilter(), false );
@@ -93,6 +112,34 @@ class BannerMonitorTest extends PHPUnit_Framework_TestCase {
 		unset( $bannersMissing['B14_WMDE_140925_ctrl'] );
 
 		$this->assertSame( $bannerMonitor->getMissingBanners( $bannersToMonitor ), $bannersMissing );
+	}
+
+	public function testBannerNotInTime_MissingBannersReturnsEmptyArray() {
+		$filter = new CentralNoticeApiFilter();
+		$filter->project = 'wikipedia';
+		$filter->country = 'DE';
+		$filter->language = 'de';
+		$filter->anonymous = true;
+		$filter->device = 'desktop';
+		$filter->bucket = 0;
+
+		$bannerMonitor = $this->newBannerMonitor( $filter, array() );
+		$bannersToMonitor = array(
+			'B14_WMDE_140925_ctrl' => array(
+				'project' => 'wikipedia',
+				'country' => 'DE',
+				'language' => 'de',
+				'anonymous' => true,
+				'device' => 'desktop',
+				'bucket' => 0,
+				'start' => '2014-09-25 14:30',
+				'end' => '2015-09-30 14:30'
+			)
+		);
+
+		self::$now = strtotime('2014-09-20 13:30');
+
+		$this->assertSame( $bannerMonitor->getMissingBanners( $bannersToMonitor ), array() );
 	}
 
 	private function newBannerMonitor( $fetcherInputFilter, $fetcherReturnValue ) {

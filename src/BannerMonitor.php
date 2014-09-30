@@ -33,7 +33,7 @@ class BannerMonitor {
 				return false;
 			}
 
-			if( !$this->isBannerInArray( $name, $bannersLive ) ) {
+			if( $this->isBannerInTime( $banner ) && !$this->isBannerInArray( $name, $bannersLive ) ) {
 				$missingBanners[$name] = $banner;
 			}
 
@@ -64,5 +64,14 @@ class BannerMonitor {
 		}
 
 		return $result;
+	}
+
+	private function isBannerInTime( $banner ) {
+		$now = time();
+		if( strtotime( $banner['start'] ) <= $now && strtotime( $banner['end'] ) >= $now ) {
+			return true;
+		}
+
+		return false;
 	}
 }
