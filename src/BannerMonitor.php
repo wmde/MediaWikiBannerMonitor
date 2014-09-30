@@ -29,6 +29,10 @@ class BannerMonitor {
 			$apiFilterOptions = $this->aggregateFilter( $banner );
 			$bannersLive = $this->centralNoticeFetcher->fetchBannersLive( $apiFilterOptions );
 
+			if( $bannersLive === false ) {
+				return false;
+			}
+
 			if( !$this->isBannerInArray( $name, $bannersLive ) ) {
 				$missingBanners[$name] = $banner;
 			}
