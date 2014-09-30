@@ -2,91 +2,63 @@
 
 namespace BannerMonitor;
 
-use FileFetcher\FileFetcher;
+use BannerMonitor\CentralNoticeAllocations\CentralNoticeAllocationsFetcher;
+use BannerMonitor\CentralNoticeAllocations\CentralNoticeApiFilter;
+
 
 /**
  * @licence GNU GPL v2+
  * @author Christoph Fischer
  */
 class BannerMonitor {
-    private $fetcher;
-    private $bannersMonitored;
 
-    public function __construct (FileFetcher $fetcher, $bannersMonitored) {
-        $this->fetcher = $fetcher;
-        $this->bannersMonitored = $bannersMonitored;
-    }
+	private $centralNoticeFetcher;
 
-    public function bannerLiveCheck ( )
-    {
-        $metaResult = $this->fetcher->fetchFile( "https://meta.wikimedia.org/w/api.php?action=centralnoticeallocations&format=json&project=wikipedia&country=DE&language=de" );
-        $bannerLiveArray = $this->getBanners( $metaResult );
+	public function __construct( CentralNoticeAllocationsFetcher $centralNoticeFetcher ) {
+		$this->centralNoticeFetcher = $centralNoticeFetcher;
+	}
 
-        if($bannerLiveArray === false) {
-            return false;
-        } elseif ( count( $bannerLiveArray ) == 0 ) {
-            $this->notifyFundraisingTeam();
-            return 0;
-        }
+	public function getMissingBanners( $bannersToLookFor ) {
+		$missingBanners = array();
 
-        $missingBanners = $this->filterMissingBanners( $bannerLiveArray );
+		if( empty( $bannersToLookFor ) ) {
+			return $missingBanners;
+		}
 
-        if( $missingBanners ) {
-            $this->notifyFundraisingTeam( $missingBanners );
-        }
+		foreach( $bannersToLookFor as $name => $banner ) {
+			$apiFilterOptions = $this->aggregateFilter( $banner );
+			$bannersLive = $this->centralNoticeFetcher->fetchBannersLive( $apiFilterOptions );
 
-    }
+			if( !$this->isBannerInArray( $name, $bannersLive ) ) {
+				$missingBanners[$name] = $banner;
+			}
 
-    public function getBanners( $string )
-    {
-        $jsonResponse = json_decode($string);
+		}
 
-        if( $jsonResponse === null ) {
-            return false;
-        }
+		return $missingBanners;
+	}
 
-        if( !isset($jsonResponse->centralnoticeallocations) || !is_array($jsonResponse->centralnoticeallocations->banners) ) {
-            return false;
-        }
+	private function aggregateFilter( $banner ) {
+		$filter = new CentralNoticeApiFilter();
+		$filter->project = $banner['project'];
+		$filter->country = $banner['country'];
+		$filter->language = $banner['language'];
+		$filter->anonymous = $banner['anonymous'];
+		$filter->device = $banner['device'];
+		$filter->bucket = $banner['bucket'];
 
-        return $jsonResponse->centralnoticeallocations->banners;
-    }
+		return $filter;
+	}
 
-    public function filterMissingBanners( $bannersLiveArray )
-    {
-        $missingBanners = array();
-        foreach( $this->bannersMonitored as $checkBanner ) {
-            if(!$this->isBannerInArray( $checkBanner, $bannersLiveArray )) {
-                $missingBanners[] = $checkBanner;
-            }
-        }
+	private function isBannerInArray( $bannerNeedle, $bannerHaystack ) {
+		$result = false;
 
-        return $missingBanners;
-    }
+		foreach( $bannerHaystack as $banner ) {
+			if( $banner->name == $bannerNeedle ) {
+				return true;
+			}
+		}
 
-    public function filterWMDEBanners( $bannersLiveArray )
-    {
-        $wmdeBanners = array();
-        foreach( $bannersLiveArray as $checkBanner ) {
-            if( preg_match( '/^C[0-9]{2}_WMDE/', $checkBanner->name) ) {
-                $wmdeBanners[] = $checkBanner;
-            }
-        }
-
-        return $wmdeBanners;
-    }
-
-
-
-    private function isBannerInArray ( $bannerNeedle, $bannerHaystack ) {
-        $result = false;
-
-        foreach( $bannerHaystack as $banner ) {
-            if( $banner->name == $bannerNeedle->name ) {
-                return true;
-            }
-        }
-
-        return $result;
-    }
+		return $result;
+	}
 }
