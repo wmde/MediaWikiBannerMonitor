@@ -41,18 +41,27 @@ class ConfigFetcherTest extends \PHPUnit_Framework_TestCase {
 		$confFilename = 'test.yaml';
 		$contentMock = "
 centralnoticeallocations:
-  project: wikipedia
-  country: DE
-  language: de
-  checkForLiveBanners:
-    banner1: { bannerId: B14_WMDE_140925_ctrl, start: 2014-09-25 14:30, end: 2014-10-02 14:30 }
+  banners:
+    banner1:
+      name: B14_WMDE_140925_ctrl
+      project: wikipedia
+      country: DE
+      language: de
+      anonymous: true
+      device: desktop
+      bucket: 1
+      start: 2014-09-25 14:30
+      end: 2014-10-02 14:30
 ";
 		$output = array(
-			'project' => 'wikipedia',
-			'country' => 'DE',
-			'language' => 'de',
-			'checkForLiveBanners' => array(
-				'banner1' => array( 'bannerId' => 'B14_WMDE_140925_ctrl',
+			'banners' => array(
+				'B14_WMDE_140925_ctrl' => array(
+					'project' => 'wikipedia',
+					'country' => 'DE',
+					'language' => 'de',
+					'anonymous' => true,
+					'device' => 'desktop',
+					'bucket' => 1,
 					'start' => '2014-09-25 14:30',
 					'end' => '2014-10-02 14:30'
 				)
@@ -70,8 +79,8 @@ centralnoticeallocations:
 		$confFilename = 'test.yaml';
 		$contentMock = "
 centralnoticeallocations:
-  checkForLiveBanners:
-    banner1: { bannerId: B14_WMDE_140925_ctrl, start: 2014-09-25, end: 2014-10-02 14:30 }
+  banners:
+    banner1: { name: B14_WMDE_140925_ctrl, start: 2014-09-25, end: 2014-10-02 14:30 }
 ";
 		$this->mockFileWithContent( $confFilename, $contentMock );
 

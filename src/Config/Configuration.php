@@ -18,46 +18,44 @@ class Configuration implements ConfigurationInterface {
 
 		$rootNode
 			->children()
-				->scalarNode( 'project' )
-					->defaultValue( '' )
-				->end()
-				->scalarNode( 'country' )
-					->defaultValue( '' )
-				->end()
-				->scalarNode( 'language' )
-					->defaultValue( '' )
-				->end()
-				->arrayNode( 'checkForLiveBanners' )
-					->prototype('array')
+				->arrayNode( 'banners' )
+					->useAttributeAsKey( 'name' )
+					->prototype( 'array' )
 						->children()
-							->scalarNode( 'bannerId' )->end()
+							->scalarNode( 'name' )->end()
+							->scalarNode( 'project' )->end()
+							->scalarNode( 'country' )->end()
+							->scalarNode( 'language' )->end()
+							->booleanNode( 'anonymous' )->end()
+							->scalarNode( 'device' )->end()
+							->integerNode( 'bucket' )->end()
 							->scalarNode( 'start' )
 								->validate()
-									->ifTrue(function ($s) {
-										return !$this->validateDate($s, 'Y-m-d H:i');
-									})
+									->ifTrue( function ( $s ) {
+										return !$this->validateDate( $s, 'Y-m-d H:i' );
+									} )
 									->thenInvalid( 'Invalid Date' )
 								->end()
 							->end()
-								->scalarNode( 'end' )
+							->scalarNode( 'end' )
 								->validate()
-									->ifTrue(function ($s) {
-										return !$this->validateDate($s, 'Y-m-d H:i');
-									})
+									->ifTrue( function ( $s ) {
+										return !$this->validateDate( $s, 'Y-m-d H:i' );
+									} )
 									->thenInvalid( 'Invalid Date' )
 								->end()
 							->end()
-						->end()
-					->end()
-				->end()
-			->end();
+								->end()
+								->end()
+								->end()
+
+								->end();
 
 		return $treeBuilder;
 	}
 
-	private function validateDate($date, $format)
-	{
-		$d = DateTime::createFromFormat($format, $date);
-		return $d && $d->format($format) == $date;
+	private function validateDate( $date, $format ) {
+		$d = DateTime::createFromFormat( $format, $date );
+		return $d && $d->format( $format ) == $date;
 	}
 } 
