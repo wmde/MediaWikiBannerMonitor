@@ -1,7 +1,7 @@
 <?php
 
 use BannerMonitor\BannerMonitor;
-use BannerMonitor\Banner;
+use BannerMonitor\CentralNoticeAllocations\CentralNoticeAllocationsBanner;
 use BannerMonitor\CentralNoticeAllocations\CentralNoticeApiFilter;
 
 /**
@@ -88,23 +88,8 @@ class BannerMonitorTest extends PHPUnit_Framework_TestCase {
 	}
 
 	private function mockBanner( $name ) {
-		$banner = new Banner();
+		$banner = new CentralNoticeAllocationsBanner();
 		$banner->name = $name;
-		$banner->weight;
-		$banner->display_anon;
-		$banner->display_account;
-		$banner->fundraising;
-		$banner->autolink;
-		$banner->landing_pages;
-		$banner->device;
-		$banner->campaign;
-		$banner->campaign_z_index;
-		$banner->campaign_num_buckets;
-		$banner->campaign_throttle;
-		$banner->bucket;
-		$banner->max_allocation;
-		$banner->allocation;
-		$banner->slots;
 
 		return $banner;
 	}
