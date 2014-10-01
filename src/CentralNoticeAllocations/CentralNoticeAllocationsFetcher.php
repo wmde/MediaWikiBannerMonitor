@@ -36,7 +36,7 @@ class CentralNoticeAllocationsFetcher {
 	}
 
 	private function checkForCleanResult( $content ) {
-		if( preg_match( '/^(<!DOCTYPE html)|(<\?xml version="1.0")/', $content ) ) {
+		if( preg_match( '/^(<!DOCTYPE html)/', $content ) ) {
 			return false;
 		}
 

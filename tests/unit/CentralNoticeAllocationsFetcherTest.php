@@ -23,7 +23,6 @@ class CentralNoticeAllocationsFetcherTest extends PHPUnit_Framework_TestCase {
 
 	public function invalidDataProvider() {
 		return array(
-			array( '<?xml' ),
 			array( '<!DOCTYPE html' ),
 			array( '{"servedby":"mw1125","error":{' ),
 			array( '' ),
