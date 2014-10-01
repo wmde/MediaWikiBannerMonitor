@@ -1,7 +1,8 @@
 <?php
 
 use BannerMonitor\BannerMonitor;
-use BannerMonitor\Banner;
+use BannerMonitor\CentralNoticeAllocations\CentralNoticeAllocationsBanner;
+use BannerMonitor\CentralNoticeAllocations\CentralNoticeApiFilter;
 
 /**
  * @covers BannerMonitor\BannerMonitor
@@ -9,76 +10,99 @@ use BannerMonitor\Banner;
  * @licence GNU GPL v2+
  * @author Christoph Fischer
  */
-class BannerMonitorTest extends PHPUnit_Framework_TestCase  {
+class BannerMonitorTest extends PHPUnit_Framework_TestCase {
 
-    private function newBannerMonitor () {
-        $fetcher = $this->getMock( 'FileFetcher\FileFetcher' );
-        $banner = new Banner();
-        $banner->name = 'wlm_2014';
+	public function testNoBannersToMonitor_ReturnsEmptyArray() {
+		$centralNoticeFetcherMock = $this->getMockBuilder( 'BannerMonitor\CentralNoticeAllocations\CentralNoticeAllocationsFetcher' )->disableOriginalConstructor()->getMock();
+		$bannerMonitor = new BannerMonitor( $centralNoticeFetcherMock );
+		$bannersToMonitor = array();
 
-        $bannersToMonitor = array( $banner );
+		$this->assertSame( $bannerMonitor->getMissingBanners( $bannersToMonitor ), array() );
+	}
 
-        return new BannerMonitor( $fetcher, $bannersToMonitor );
-    }
+	public function testNoBannersLive_ReturnsInputArray() {
+		$filter = new CentralNoticeApiFilter();
+		$filter->project = 'wikipedia';
+		$filter->country = 'DE';
+		$filter->language = 'de';
+		$filter->anonymous = true;
+		$filter->device = 'desktop';
+		$filter->bucket = 0;
 
-    public function testCanConstructBannerMonitor() {
-        $fetcher = $this->getMock( 'FileFetcher\FileFetcher' );
+		$bannerMonitor = $this->newBannerMonitor( $filter, array() );
+		$bannersToMonitor = array(
+			'B14_WMDE_140925_ctrl' => array(
+				'project' => 'wikipedia',
+				'country' => 'DE',
+				'language' => 'de',
+				'anonymous' => true,
+				'device' => 'desktop',
+				'bucket' => 0,
+				'start' => '2014-09-25 14:30',
+				'end' => '2014-10-02 14:30'
+			)
+		);
 
-        new BannerMonitor( $fetcher, array() );
-        $this->assertTrue( true );
-    }
+		$this->assertSame( $bannerMonitor->getMissingBanners( $bannersToMonitor ), $bannersToMonitor );
+	}
 
-    /**
-     * @dataProvider invalidDataProvider
-     */
-    public function testFetcherReturnsInvalidData_MonitorReturnsFalse( $input, $result ) {
-        $bannerMonitor = $this->newBannerMonitor();
+	public function testSomeBannersLive_ReturnsMissingBannersArray() {
+		$bannerMonitor = $this->newBannerMonitor( $this->mockFilter(), array( $this->mockBanner( 'B14_WMDE_140925_ctrl' ) ) );
+		$bannersToMonitor = array(
+			'B14_WMDE_140925_ctrl' => array(
+				'project' => 'wikipedia',
+				'country' => 'DE',
+				'language' => 'de',
+				'anonymous' => true,
+				'device' => 'desktop',
+				'bucket' => 0,
+				'start' => '2014-09-25 14:30',
+				'end' => '2014-10-02 14:30'
+			),
+			'B14_WMDE_140925_switch' => array(
+				'project' => 'wikipedia',
+				'country' => 'DE',
+				'language' => 'de',
+				'anonymous' => true,
+				'device' => 'desktop',
+				'bucket' => 0,
+				'start' => '2014-09-25 14:30',
+				'end' => '2014-10-02 14:30'
+			)
+		);
 
-        $output = $bannerMonitor->getBanners( $input );
-        $this->assertSame($output, $result );
-    }
+		$bannersMissing = $bannersToMonitor;
+		unset( $bannersMissing['B14_WMDE_140925_ctrl'] );
 
-    public function invalidDataProvider()
-    {
-        return array(
-            array('', false),
-            array('{asfasfas', false),
-            array('{"foo":"bar"}', false),
-        );
-    }
+		$this->assertSame( $bannerMonitor->getMissingBanners( $bannersToMonitor ), $bannersMissing );
+	}
 
-    public function testFetcherReturnsCentralNoticeBanner_MonitorReturnsBannerArray() {
-        $bannerMonitor = $this->newBannerMonitor();
+	private function newBannerMonitor( $fetcherInputFilter, $fetcherReturnValue ) {
+		$centralNoticeFetcherMock = $this->getMockBuilder( 'BannerMonitor\CentralNoticeAllocations\CentralNoticeAllocationsFetcher' )->disableOriginalConstructor()->getMock();
 
-        $result = $bannerMonitor->getBanners( '{"centralnoticeallocations":{"banners":[]}}' );
+		$centralNoticeFetcherMock->method( 'fetchBannersLive' )
+			->with( $this->equalTo( $fetcherInputFilter ) )
+			->will( $this->returnValue( $fetcherReturnValue ) );
 
-        $bannerResult = array();
-        $this->assertSame($result, $bannerResult );
-    }
+		return new BannerMonitor( $centralNoticeFetcherMock );
+	}
 
-    public function testConfiguredBannerIsNotLive_MissingFilterReturnsMissingBanners() {
-        $bannerMonitor = $this->newBannerMonitor();
+	private function mockBanner( $name ) {
+		$banner = new CentralNoticeAllocationsBanner();
+		$banner->name = $name;
 
-        $result = $bannerMonitor->filterMissingBanners( array() );
+		return $banner;
+	}
 
-        $banner = new Banner();
-        $banner->name = 'wlm_2014';
-        $monitorResult = array( 0 => $banner );
+	private function mockFilter() {
+		$filter = new CentralNoticeApiFilter();
+		$filter->project = 'wikipedia';
+		$filter->country = 'DE';
+		$filter->language = 'de';
+		$filter->anonymous = true;
+		$filter->device = 'desktop';
+		$filter->bucket = 0;
 
-        $this->assertEquals($result, $monitorResult );
-    }
-
-    public function testWMDEBannerIsLive_BannerFilterReturnsBanner() {
-        $bannerMonitor = $this->newBannerMonitor();
-
-        $banner = new Banner();
-        $banner->name = 'C14_WMDE';
-        $filterInput = array( 0 => $banner );
-
-        $result = $bannerMonitor->filterWMDEBanners( $filterInput );
-
-        $filterOutput = array( 0 => $banner );
-
-        $this->assertEquals($result, $filterOutput );
-    }
+		return $filter;
+	}
 }
