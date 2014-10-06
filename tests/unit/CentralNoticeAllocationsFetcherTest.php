@@ -3,7 +3,7 @@
 use BannerMonitor\CentralNoticeAllocations\CentralNoticeAllocationsFetcher;
 
 /**
- * @covers BannerMonitor\CentralNoticeAllocationsFetcherTest
+ * @covers BannerMonitor\CentralNoticeAllocationsFetcher
  *
  * @licence GNU GPL v2+
  * @author Christoph Fischer
