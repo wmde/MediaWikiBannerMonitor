@@ -53,13 +53,20 @@ class CheckBannersCommand extends Command {
 		$outputLines[] = 'Checking banners';
 
 		if( !$confFile ) {
-			$outputLines[] = 'Error reading config-file...';
+			$outputLines[] = 'No config-file...';
 			$output->writeln( $outputLines );
 			return -1;
 		}
 
 		$outputLines[] = '...with file ' . $confFile;
 		$configValues = $this->configFetcher->fetchConfig( $confFile );
+
+		if( $configValues === false ) {
+			$outputLines[] = 'Error reading config-file...';
+			$output->writeln( $outputLines );
+			return -1;
+		}
+
 		$missingBanners = $this->bannerMonitor->getMissingBanners( $configValues['banners'] );
 
 		if( !is_array( $missingBanners ) ) {
