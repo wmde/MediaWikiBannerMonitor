@@ -21,6 +21,6 @@ class SwiftMailNotifierTest extends \PHPUnit_Framework_TestCase {
 
 		$swiftMailer = new SwiftMailNotifier( $mailer, array(), 'test@example.com' );
 
-		$this->assertFalse( $swiftMailer->notifyAdmin( '', '' ) );
+		$this->assertFalse( $swiftMailer->notify( '', '' ) );
 	}
 }
