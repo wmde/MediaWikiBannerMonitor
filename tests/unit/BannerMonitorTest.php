@@ -80,6 +80,8 @@ class BannerMonitorTest extends \PHPUnit_Framework_TestCase {
 			)
 		);
 
+		self::$now = strtotime('2014-10-01 14:30');
+
 		$this->assertSame( $bannerMonitor->getMissingBanners( $bannersToMonitor ), $bannersToMonitor );
 	}
 
@@ -111,6 +113,8 @@ class BannerMonitorTest extends \PHPUnit_Framework_TestCase {
 		$bannersMissing = $bannersToMonitor;
 		unset( $bannersMissing['B14_WMDE_140925_ctrl'] );
 
+		self::$now = strtotime('2014-10-01 14:30');
+
 		$this->assertSame( $bannerMonitor->getMissingBanners( $bannersToMonitor ), $bannersMissing );
 	}
 
@@ -133,11 +137,11 @@ class BannerMonitorTest extends \PHPUnit_Framework_TestCase {
 				'device' => 'desktop',
 				'bucket' => 0,
 				'start' => '2014-09-25 14:30',
-				'end' => '2015-09-30 14:30'
+				'end' => '2014-09-30 14:30'
 			)
 		);
 
-		self::$now = strtotime('2014-09-20 13:30');
+		self::$now = strtotime('2014-10-20 13:30');
 
 		$this->assertSame( $bannerMonitor->getMissingBanners( $bannersToMonitor ), array() );
 	}
