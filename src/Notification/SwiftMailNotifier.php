@@ -8,11 +8,11 @@ namespace BannerMonitor\Notification;
 
 
 use Swift_Message;
-use Swift_MailTransport;
 use Swift_Mailer;
 
-class MailNotifier implements Notifier {
+class SwiftMailNotifier implements Notifier {
 
+	private $mailer;
 	private $receiver;
 	private $senderMail;
 
@@ -20,7 +20,8 @@ class MailNotifier implements Notifier {
 	 * @param string|array $receiver
 	 * @param string $senderMail
 	 */
-	public function __construct( $receiver, $senderMail ) {
+	public function __construct( Swift_Mailer $mailer, $receiver, $senderMail ) {
+		$this->mailer = $mailer;
 		$this->receiver = $receiver;
 		$this->senderMail = $senderMail;
 	}
@@ -51,9 +52,6 @@ class MailNotifier implements Notifier {
 	}
 
 	private function sendMail( Swift_Message $message ) {
-		$transport = Swift_MailTransport::newInstance();
-		$mailer = Swift_Mailer::newInstance( $transport );
-
-		return $mailer->send( $message );
+		return $this->mailer->send( $message );
 	}
 }
