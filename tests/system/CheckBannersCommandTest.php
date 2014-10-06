@@ -18,8 +18,9 @@ class CheckBannersCommandTest extends \PHPUnit_Framework_TestCase {
 
 		$configFetcher = $this->getMockBuilder( 'BannerMonitor\Config\ConfigFetcher' )->disableOriginalConstructor()->getMock();
 		$bannerMonitor = $this->getMockBuilder( 'BannerMonitor\BannerMonitor' )->disableOriginalConstructor()->getMock();
+		$notifier = $this->getMock( 'BannerMonitor\Notification\Notifier' );
 
-		$command->setDependencies( $configFetcher, $bannerMonitor );
+		$command->setDependencies( $configFetcher, $bannerMonitor, $notifier );
 
 		$tester = new CommandTester( $command );
 		$tester->execute( $arguments );
@@ -37,11 +38,4 @@ class CheckBannersCommandTest extends \PHPUnit_Framework_TestCase {
 
 		$this->assertContains( '...with file banners.conf', $output );
 	}
-
-	public function testCheckBannersCommandWithNotificationOption() {
-		$output = $this->getOutputForArguments( array( 'config-file' => 'banners.conf', '--notify-mail' => true ) );
-
-		$this->assertContains( '...with notify-mail option', $output );
-	}
-
 }

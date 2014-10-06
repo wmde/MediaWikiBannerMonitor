@@ -7,6 +7,10 @@ use FileFetcher\SimpleFileFetcher;
 use BannerMonitor\Commands\CheckBannersCommand;
 use BannerMonitor\Config\ConfigFetcher;
 use BannerMonitor\CentralNoticeAllocations\CentralNoticeAllocationsFetcher;
+use BannerMonitor\Notification\SwiftMailNotifier;
+use Swift_MailTransport;
+use Swift_Mailer;
+
 
 /**
  * @licence GNU GPL v2+
@@ -35,7 +39,11 @@ class Factory {
 		$caFetcher = new CentralNoticeAllocationsFetcher( META_API_URL, $fileFetcher );
 		$bannerMonitor = new BannerMonitor( $caFetcher );
 
-		$command->setDependencies( $configFetcher, $bannerMonitor );
+		$transport = Swift_MailTransport::newInstance();
+		$mailer = Swift_Mailer::newInstance($transport);
+		$notifier = new SwiftMailNotifier( $mailer, MAIL_RECEIVER, MAIL_SENDER_EMAIL);
+
+		$command->setDependencies( $configFetcher, $bannerMonitor, $notifier );
 
 		$app->add( $command );
 	}

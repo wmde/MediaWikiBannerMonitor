@@ -4,6 +4,7 @@ namespace BannerMonitor\Commands;
 
 use BannerMonitor\BannerMonitor;
 use BannerMonitor\Config\ConfigFetcher;
+use BannerMonitor\Notification\Notifier;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -20,6 +21,7 @@ class CheckBannersCommand extends Command {
 
 	private $configFetcher;
 	private $bannerMonitor;
+	private $notifier;
 
 	protected function configure() {
 		$this
@@ -38,7 +40,7 @@ class CheckBannersCommand extends Command {
 			);
 	}
 
-	public function setDependencies( ConfigFetcher $configFetcher, BannerMonitor $bannerMonitor ) {
+	public function setDependencies( ConfigFetcher $configFetcher, BannerMonitor $bannerMonitor, Notifier $notifier  ) {
 		$this->configFetcher = $configFetcher;
 		$this->bannerMonitor = $bannerMonitor;
 	}
@@ -48,19 +50,30 @@ class CheckBannersCommand extends Command {
 
 		$output->writeln( 'Checking banners' );
 
-		if( $confFile ) {
-			$output->writeln( '...with file ' . $confFile );
-			$configValues = $this->configFetcher->fetchConfig( $confFile );
-			$missingBanners = $this->bannerMonitor->getMissingBanners( $configValues['banners'] );
-		} else {
-			retrun - 1;
+		if( !$confFile ) {
+			$output->writeln( 'Error reading config-file...');
+			return -1;
+		}
+
+		$output->writeln( '...with file ' . $confFile );
+		$configValues = $this->configFetcher->fetchConfig( $confFile );
+		$missingBanners = $this->bannerMonitor->getMissingBanners( $configValues['banners'] );
+
+		if( !is_array($missingBanners) ) {
+			$output->writeln( 'Error getting Banners...');
+			return -1;
+		}
+
+		if( count($missingBanners) === 0 ) {
+			$output->writeln( 'No Banners Missing.');
+			return -1;
 		}
 
 		if( $input->getOption( 'notify-mail' ) ) {
 			$output->writeln( '...with notify-mail option' );
 
 		} else {
-			$output->writeln( 'missing banners:' );
+			$output->writeln( 'Banners Missing:' );
 			$output->writeln( json_encode( $missingBanners ) );
 		}
 	}
