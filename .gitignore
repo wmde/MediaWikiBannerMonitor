@@ -7,6 +7,7 @@
 .idea/
 build/
 vendor/
+conf/local-config.inc.php
 
 composer.phar
 composer.lock
