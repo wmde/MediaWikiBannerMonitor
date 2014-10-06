@@ -3,12 +3,12 @@
 use BannerMonitor\CentralNoticeAllocations\CentralNoticeAllocationsFetcher;
 
 /**
- * @covers BannerMonitor\CentralNoticeAllocationsFetcherTester
+ * @covers BannerMonitor\CentralNoticeAllocationsFetcherTest
  *
  * @licence GNU GPL v2+
  * @author Christoph Fischer
  */
-class CentralNoticeAllocationsFetcherTester extends PHPUnit_Framework_TestCase {
+class CentralNoticeAllocationsFetcherTest extends PHPUnit_Framework_TestCase {
 
 	/**
 	 * @dataProvider invalidDataProvider
@@ -23,7 +23,6 @@ class CentralNoticeAllocationsFetcherTester extends PHPUnit_Framework_TestCase {
 
 	public function invalidDataProvider() {
 		return array(
-			array( '<?xml' ),
 			array( '<!DOCTYPE html' ),
 			array( '{"servedby":"mw1125","error":{' ),
 			array( '' ),
