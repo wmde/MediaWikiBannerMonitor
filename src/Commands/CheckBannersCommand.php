@@ -38,7 +38,7 @@ class CheckBannersCommand extends Command {
 			);
 	}
 
-	public function setDependencies(ConfigFetcher $configFetcher, BannerMonitor $bannerMonitor) {
+	public function setDependencies( ConfigFetcher $configFetcher, BannerMonitor $bannerMonitor ) {
 		$this->configFetcher = $configFetcher;
 		$this->bannerMonitor = $bannerMonitor;
 	}
@@ -50,10 +50,18 @@ class CheckBannersCommand extends Command {
 
 		if( $confFile ) {
 			$output->writeln( '...with file ' . $confFile );
+			$configValues = $this->configFetcher->fetchConfig( $confFile );
+			$missingBanners = $this->bannerMonitor->getMissingBanners( $configValues['banners'] );
+		} else {
+			retrun - 1;
 		}
 
 		if( $input->getOption( 'notify-mail' ) ) {
 			$output->writeln( '...with notify-mail option' );
+
+		} else {
+			$output->writeln( 'missing banners:' );
+			$output->writeln( json_encode( $missingBanners ) );
 		}
 	}
 
