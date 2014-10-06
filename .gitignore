@@ -8,6 +8,7 @@
 build/
 vendor/
 conf/local-config.inc.php
+banners.yml
 
 composer.phar
 composer.lock
