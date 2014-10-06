@@ -40,42 +40,50 @@ class CheckBannersCommand extends Command {
 			);
 	}
 
-	public function setDependencies( ConfigFetcher $configFetcher, BannerMonitor $bannerMonitor, Notifier $notifier  ) {
+	public function setDependencies( ConfigFetcher $configFetcher, BannerMonitor $bannerMonitor, Notifier $notifier ) {
 		$this->configFetcher = $configFetcher;
 		$this->bannerMonitor = $bannerMonitor;
 	}
 
 	protected function execute( InputInterface $input, OutputInterface $output ) {
 		$confFile = $input->getArgument( 'config-file' );
+		$outputLines = array();
 
-		$output->writeln( 'Checking banners' );
+		$outputLines[] = 'Checking banners';
 
 		if( !$confFile ) {
-			$output->writeln( 'Error reading config-file...');
+			$outputLines[] = 'Error reading config-file...';
+			$output->writeln( $outputLines );
 			return -1;
 		}
 
-		$output->writeln( '...with file ' . $confFile );
+		$outputLines[] = '...with file ' . $confFile;
 		$configValues = $this->configFetcher->fetchConfig( $confFile );
 		$missingBanners = $this->bannerMonitor->getMissingBanners( $configValues['banners'] );
 
-		if( !is_array($missingBanners) ) {
-			$output->writeln( 'Error getting Banners...');
+		if( !is_array( $missingBanners ) ) {
+			$outputLines[] = 'Error getting Banners...';
+			$output->writeln( $outputLines );
 			return -1;
 		}
 
-		if( count($missingBanners) === 0 ) {
-			$output->writeln( 'No Banners Missing.');
+		if( count( $missingBanners ) === 0 ) {
+			$outputLines[] = 'No Banners Missing.';
+			$output->writeln( $outputLines );
 			return -1;
 		}
+
+		$outputLines[] = 'Banners Missing:';
+		$outputLines[] = json_encode( $missingBanners );
 
 		if( $input->getOption( 'notify-mail' ) ) {
-			$output->writeln( '...with notify-mail option' );
+			$outputLines[] = '...with notify-mail option';
 
-		} else {
-			$output->writeln( 'Banners Missing:' );
-			$output->writeln( json_encode( $missingBanners ) );
+			$subject = 'Missing Banners:';
+			$this->notifier->notify( $subject, $output );
 		}
+
+		$output->writeln( $outputLines );
 	}
 
 }
