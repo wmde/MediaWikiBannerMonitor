@@ -26,7 +26,7 @@ class SwiftMailNotifier implements Notifier {
 		$this->senderMail = $senderMail;
 	}
 
-	public function notifyAdmin( $subject, $body ) {
+	public function notify( $subject, $body ) {
 		$message = $this->composeMessage( $subject, $body, $this->senderMail, $this->receiver );
 
 		$result = $this->sendMail( $message );

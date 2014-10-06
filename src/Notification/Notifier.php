@@ -14,5 +14,5 @@ interface Notifier {
 	 * @param string $body
 	 * @return boolean
 	 */
-	public function notifyAdmin ( $subject, $body );
+	public function notify ( $subject, $body );
 }
