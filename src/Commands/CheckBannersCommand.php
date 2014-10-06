@@ -43,6 +43,7 @@ class CheckBannersCommand extends Command {
 	public function setDependencies( ConfigFetcher $configFetcher, BannerMonitor $bannerMonitor, Notifier $notifier ) {
 		$this->configFetcher = $configFetcher;
 		$this->bannerMonitor = $bannerMonitor;
+		$this->notifier = $notifier;
 	}
 
 	protected function execute( InputInterface $input, OutputInterface $output ) {
@@ -79,8 +80,8 @@ class CheckBannersCommand extends Command {
 		if( $input->getOption( 'notify-mail' ) ) {
 			$outputLines[] = '...with notify-mail option';
 
-			$subject = 'Missing Banners:';
-			$this->notifier->notify( $subject, $output );
+			$subject = 'Missing Banners';
+			$this->notifier->notify( $subject, implode( "\n", $outputLines ) );
 		}
 
 		$output->writeln( $outputLines );
