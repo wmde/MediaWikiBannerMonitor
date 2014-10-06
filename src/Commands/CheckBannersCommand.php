@@ -2,6 +2,7 @@
 
 namespace BannerMonitor\Commands;
 
+use BannerMonitor\BannerMonitor;
 use BannerMonitor\Config\ConfigFetcher;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -18,6 +19,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 class CheckBannersCommand extends Command {
 
 	private $configFetcher;
+	private $bannerMonitor;
 
 	protected function configure() {
 		$this
@@ -36,7 +38,9 @@ class CheckBannersCommand extends Command {
 			);
 	}
 
-	public function setDependencies() {
+	public function setDependencies(ConfigFetcher $configFetcher, BannerMonitor $bannerMonitor) {
+		$this->configFetcher = $configFetcher;
+		$this->bannerMonitor = $bannerMonitor;
 	}
 
 	protected function execute( InputInterface $input, OutputInterface $output ) {

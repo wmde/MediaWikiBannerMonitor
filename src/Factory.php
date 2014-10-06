@@ -2,13 +2,16 @@
 
 namespace BannerMonitor;
 
+use Symfony\Component\Console\Application;
+use FileFetcher\SimpleFileFetcher;
 use BannerMonitor\Commands\CheckBannersCommand;
 use BannerMonitor\Config\ConfigFetcher;
-use Symfony\Component\Console\Application;
+use BannerMonitor\CentralNoticeAllocations\CentralNoticeAllocationsFetcher;
 
 /**
  * @licence GNU GPL v2+
  * @author Jeroen De Dauw < jeroendedauw@gmail.com >
+ * @author Christoph Fischer
  */
 class Factory {
 
@@ -26,7 +29,13 @@ class Factory {
 	private function addCheckBannersCommandTo( Application $app ) {
 		$command = new CheckBannersCommand();
 
-		$command->setDependencies();
+		$fileFetcher = new SimpleFileFetcher();
+		$configFetcher = new ConfigFetcher( $fileFetcher );
+
+		$caFetcher = new CentralNoticeAllocationsFetcher( META_API_URL, $fileFetcher );
+		$bannerMonitor = new BannerMonitor( $caFetcher );
+
+		$command->setDependencies( $configFetcher, $bannerMonitor );
 
 		$app->add( $command );
 	}

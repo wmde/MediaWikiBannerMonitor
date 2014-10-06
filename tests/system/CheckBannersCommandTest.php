@@ -16,7 +16,10 @@ class CheckBannersCommandTest extends \PHPUnit_Framework_TestCase {
 	private function getOutputForArguments( array $arguments ) {
 		$command = new CheckBannersCommand();
 
-		$command->setDependencies();
+		$configFetcher = $this->getMockBuilder( 'BannerMonitor\Config\ConfigFetcher' )->disableOriginalConstructor()->getMock();
+		$bannerMonitor = $this->getMockBuilder( 'BannerMonitor\BannerMonitor' )->disableOriginalConstructor()->getMock();
+
+		$command->setDependencies( $configFetcher, $bannerMonitor );
 
 		$tester = new CommandTester( $command );
 		$tester->execute( $arguments );
@@ -25,7 +28,7 @@ class CheckBannersCommandTest extends \PHPUnit_Framework_TestCase {
 	}
 
 	public function testCheckBannersCommandWithNoArguments_RuntimeExceptionThrown() {
-		$this->setExpectedException('RuntimeException');
+		$this->setExpectedException( 'RuntimeException' );
 		$this->getOutputForArguments( array() );
 	}
 
