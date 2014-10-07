@@ -18,7 +18,7 @@ class SwiftMailNotifier implements Notifier {
 
 	/**
 	 * @param string|array $receiver
-	 * @param string $senderMail
+	 * @param string|array $senderMail
 	 */
 	public function __construct( Swift_Mailer $mailer, $receiver, $senderMail ) {
 		$this->mailer = $mailer;
