@@ -30,7 +30,7 @@ class CentralNoticeAllocationsFetcher {
 
 	private function fetchContent( CentralNoticeApiFilter $filter ) {
 		$fetchUrl = $this->buildUrl( $filter );
-		$content = $this->fileFetcher->fetchFile( $fetchUrl );
+		$content = @$this->fileFetcher->fetchFile( $fetchUrl );
 
 		return $this->checkForCleanResult( $content );
 	}

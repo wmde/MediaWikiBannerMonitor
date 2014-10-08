@@ -14,7 +14,7 @@ class ConfigFetcher {
 
 	private $fetcher;
 
-	public function __construct ( FileFetcher $fetcher ) {
+	public function __construct( FileFetcher $fetcher ) {
 		$this->fetcher = $fetcher;
 	}
 
@@ -41,6 +41,9 @@ class ConfigFetcher {
 	}
 
 	private function fetchConfigContent( $fileName ) {
+		if( !file_exists( $fileName ) ) {
+			return false;
+		}
 		return $this->fetcher->fetchFile( $fileName );
 	}
 
@@ -57,7 +60,7 @@ class ConfigFetcher {
 				$configuration,
 				$configValues
 			);
-		} catch (Exception $e) {
+		} catch( Exception $e ) {
 			return false;
 		}
 

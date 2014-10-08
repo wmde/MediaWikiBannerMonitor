@@ -19,6 +19,14 @@ class ConfigFetcherTest extends \PHPUnit_Framework_TestCase {
 		$this->rootDir = vfsStream::url( 'test' );
 	}
 
+	public function testFileNotPresent_ReturnsFalse() {
+		$confFilename = 'test.yml';
+
+		$configFetcher = $this->setUpFetcher();
+
+		$this->assertFalse( $configFetcher->fetchConfig( $this->getMockFilePath( $confFilename ) ) );
+	}
+
 	public function testInvalidFilename_ReturnsFalse() {
 		$confFilename = 'test.yml';
 		$this->mockFile( $confFilename );
