@@ -1,0 +1,12 @@
+centralnoticeallocations:
+  banners:
+    banner1:
+      name: BANNERID
+      project: wikipedia
+      country: DE
+      language: de
+      anonymous: true
+      device: desktop
+      bucket: 1
+      start: 2014-09-25 14:30
+      end: 2014-10-10 14:30
