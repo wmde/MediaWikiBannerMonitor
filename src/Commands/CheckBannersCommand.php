@@ -2,7 +2,9 @@
 
 namespace BannerMonitor\Commands;
 
+use BannerMonitor\BannerMonitor;
 use BannerMonitor\Config\ConfigFetcher;
+use BannerMonitor\Notification\Notifier;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -18,6 +20,8 @@ use Symfony\Component\Console\Output\OutputInterface;
 class CheckBannersCommand extends Command {
 
 	private $configFetcher;
+	private $bannerMonitor;
+	private $notifier;
 
 	protected function configure() {
 		$this
@@ -36,21 +40,58 @@ class CheckBannersCommand extends Command {
 			);
 	}
 
-	public function setDependencies() {
+	public function setDependencies( ConfigFetcher $configFetcher, BannerMonitor $bannerMonitor, Notifier $notifier ) {
+		$this->configFetcher = $configFetcher;
+		$this->bannerMonitor = $bannerMonitor;
+		$this->notifier = $notifier;
 	}
 
 	protected function execute( InputInterface $input, OutputInterface $output ) {
 		$confFile = $input->getArgument( 'config-file' );
+		$outputLines = array();
 
-		$output->writeln( 'Checking banners' );
+		$outputLines[] = 'Checking banners';
 
-		if( $confFile ) {
-			$output->writeln( '...with file ' . $confFile );
+		if( !$confFile ) {
+			$outputLines[] = 'No config-file...';
+			$output->writeln( $outputLines );
+			return -1;
 		}
+
+		$outputLines[] = '...with file ' . $confFile;
+		$configValues = $this->configFetcher->fetchConfig( $confFile );
+
+		if( $configValues === false ) {
+			$outputLines[] = 'Error reading config-file...';
+			$output->writeln( $outputLines );
+			return -1;
+		}
+
+		$missingBanners = $this->bannerMonitor->getMissingBanners( $configValues['banners'] );
+
+		if( !is_array( $missingBanners ) ) {
+			$outputLines[] = 'Error getting Banners...';
+			$output->writeln( $outputLines );
+			return -1;
+		}
+
+		if( count( $missingBanners ) === 0 ) {
+			$outputLines[] = 'No Banners Missing.';
+			$output->writeln( $outputLines );
+			return -1;
+		}
+
+		$outputLines[] = 'Banners Missing:';
+		$outputLines[] = json_encode( $missingBanners );
 
 		if( $input->getOption( 'notify-mail' ) ) {
-			$output->writeln( '...with notify-mail option' );
+			$outputLines[] = '...with notify-mail option';
+
+			$subject = 'Missing Banners';
+			$this->notifier->notify( $subject, implode( "\n", $outputLines ) );
 		}
+
+		$output->writeln( $outputLines );
 	}
 
 }

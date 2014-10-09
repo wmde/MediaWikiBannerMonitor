@@ -2,13 +2,20 @@
 
 namespace BannerMonitor;
 
+use Symfony\Component\Console\Application;
+use FileFetcher\SimpleFileFetcher;
 use BannerMonitor\Commands\CheckBannersCommand;
 use BannerMonitor\Config\ConfigFetcher;
-use Symfony\Component\Console\Application;
+use BannerMonitor\CentralNoticeAllocations\CentralNoticeAllocationsFetcher;
+use BannerMonitor\Notification\SwiftMailNotifier;
+use Swift_MailTransport;
+use Swift_Mailer;
+
 
 /**
  * @licence GNU GPL v2+
  * @author Jeroen De Dauw < jeroendedauw@gmail.com >
+ * @author Christoph Fischer
  */
 class Factory {
 
@@ -26,7 +33,17 @@ class Factory {
 	private function addCheckBannersCommandTo( Application $app ) {
 		$command = new CheckBannersCommand();
 
-		$command->setDependencies();
+		$fileFetcher = new SimpleFileFetcher();
+		$configFetcher = new ConfigFetcher( $fileFetcher );
+
+		$caFetcher = new CentralNoticeAllocationsFetcher( META_API_URL, $fileFetcher );
+		$bannerMonitor = new BannerMonitor( $caFetcher );
+
+		$transport = Swift_MailTransport::newInstance();
+		$mailer = Swift_Mailer::newInstance($transport);
+		$notifier = new SwiftMailNotifier( $mailer, MAIL_RECEIVER, MAIL_SENDER_EMAIL);
+
+		$command->setDependencies( $configFetcher, $bannerMonitor, $notifier );
 
 		$app->add( $command );
 	}
