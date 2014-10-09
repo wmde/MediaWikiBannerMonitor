@@ -9,13 +9,19 @@ notifications if something is wrong.
 
 ## Installation
 
-PHP 5.4 or above is needed.
+PHP 5.3 or above is needed.
 
 Get [http://getcomposer.org/](Composer) if it's not already installed.
 
 Change into the root directory and run
 
     composer install
+
+## Configuration
+
+	cp conf/local-config.sample.inc.php conf/local-config.inc.php
+
+	adjust settings in banners.sample.yml for bannercheck configuration
 
 ## Usage
 
