@@ -2,6 +2,7 @@
 
 namespace BannerMonitor\Config;
 
+use Exception;
 use Symfony\Component\Config\Definition\Processor;
 use Symfony\Component\Yaml\Yaml;
 use FileFetcher\FileFetcher;
