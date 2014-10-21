@@ -19,8 +19,19 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class CheckBannersCommand extends Command {
 
+	/**
+	 * @var ConfigFetcher
+	 */
 	private $configFetcher;
+
+	/**
+	 * @var BannerMonitor
+	 */
 	private $bannerMonitor;
+
+	/**
+	 * @var Notifier
+	 */
 	private $notifier;
 
 	protected function configure() {
