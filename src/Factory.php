@@ -40,8 +40,8 @@ class Factory {
 		$bannerMonitor = new BannerMonitor( $caFetcher );
 
 		$transport = Swift_MailTransport::newInstance();
-		$mailer = Swift_Mailer::newInstance($transport);
-		$notifier = new SwiftMailNotifier( $mailer, MAIL_RECEIVER, MAIL_SENDER_EMAIL);
+		$mailer = Swift_Mailer::newInstance( $transport );
+		$notifier = new SwiftMailNotifier( $mailer, MAIL_RECEIVER, array( MAIL_SENDER_EMAIL => MAIL_SENDER_NAME ) );
 
 		$command->setDependencies( $configFetcher, $bannerMonitor, $notifier );
 
