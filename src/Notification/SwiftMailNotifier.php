@@ -17,6 +17,7 @@ class SwiftMailNotifier implements Notifier {
 	private $senderMail;
 
 	/**
+	 * @param Swift_Mailer $mailer
 	 * @param string|array $receiver
 	 * @param string|array $senderMail
 	 */
@@ -31,7 +32,7 @@ class SwiftMailNotifier implements Notifier {
 
 		$result = $this->sendMail( $message );
 
-		if( $result == 0 ) {
+		if ( $result == 0 ) {
 			return false;
 		}
 
